@@ -1,0 +1,333 @@
+<pre class='metadata'>
+Title: Time Functions
+Shortname: time-fn
+Level: none
+Status: LD
+Editor: Ieben Smessaert, Ghent University - imec http://idlab.ugent.be/, ieben.smessaert@ugent.be
+Abstract: This document defines a set of Time Functions that can be utilized in SPARQL queries to manipulate time literals. These functions enable the explicit specification of timezones for time periods, including partial dateTimes like xsd:gYear, as well as dateTimes without a specified timezone. Additionally, they facilitate the retrieval of the inclusive or exclusive bounds of a time period.
+Markup Shorthands: markdown yes, css no
+Canonical URL: https://w3id.org/time-fn/
+</pre>
+
+## Namespace
+
+The Time Functions ontology's namespace is [https://w3id.org/time-fn/](https://w3id.org/time-fn/).
+
+The preferred namespace prefix is `time-fn:`.
+
+The current version of the ontology specified in this document is `1.0.0`.
+
+# Introduction
+
+The Time Functions ontology offers a set of functions tailored to manage time literals in RDF and SPARQL. It addresses the need for manipulating time periods, including those without a designated timezone, and facilitates the retrieval of inclusive or exclusive bounds for these periods.
+
+This functionality enables the comparison of time literals in SPARQL queries by mapping time periods, not necessarily `xsd:dateTime` literals, to specific `xsd:dateTime` values with an explicit timezone.
+
+These functions are particularly useful for working with time periods that may include partial dateTimes, such as `xsd:gYear`, `xsd:gYearMonth`, and `xsd:date`, and for handling dateTimes that lack a specified timezone.
+
+In addition to mapping time periods to specific `xsd:dateTime` values based on their inclusive or exclusive bounds, a function is also provided to assign a default timezone to time literals without a specified timezone.
+
+## Function signatures and descriptions
+
+Each function in the Time Functions ontology is defined in this document according to a similar standard proforma as defined in [[!XQuery-Functions inline]].
+
+Each function definition follows the structure:
+
+```xquery
+time-fn:function-name($parameter-name as parameter-type, ...) as return-type
+```
+
+Where:
+- `time-fn:function-name` is the name of the function.
+- `$parameter-name` is the name of the parameter.
+- `parameter-type` is the type of the parameter, such as `xsd:dateTime`, `xsd:date`, or `xsd:gYear`.
+- `return-type` is the type of the return value, typically `xsd:dateTime`.
+
+# Time Functions
+
+This section lists all the functions defined in the Time Functions ontology operating on the [[!XMLSchema inline]] date and time types `xsd:dateTime`, `xsd:date`, `xsd:gYearMonth`, and `xsd:gYear`.
+
+
+## time-fn:periodMinInclusive
+
+**Summary**
+
+Returns the inclusive lower bound of a time period.
+
+**Signature**
+
+```xquery
+time-fn:periodMinInclusive(
+    $period as xsd:dateTime | xsd:date | xsd:gYearMonth | xsd:gYear
+) as xsd:dateTime
+```
+
+**Properties**
+
+This function is [deterministic](https://www.w3.org/TR/xpath-functions-31/#dt-deterministic), [context-independent](https://www.w3.org/TR/xpath-functions-31/#dt-context-independent), and [focus-independent](https://www.w3.org/TR/xpath-functions-31/#dt-focus-independent).
+
+**Rules**
+
+The function `time-fn:periodMinInclusive` takes a time period as input and returns the inclusive lower bound of that period as an `xsd:dateTime`.
+The input `$period` can be of type `xsd:dateTime`, `xsd:date`, `xsd:gYearMonth`, or `xsd:gYear`.
+
+If the input `$period` is an `xsd:dateTime` and has a timezone, the function returns the same value.
+Otherwise, if the input is an `xsd:dateTime` but has no explicit timezone, the input is interpreted as a period of -14 hours to +14 hours around the given dateTime, and the inclusive lower bound is returned as the `xsd:dateTime` with a timezone of UTC-14:00.
+
+If the input `$period` is an `xsd:date`, it is interpreted as a period from the start of that date (00:00:00.000) to the end of that date (23:59:59.999), and the inclusive lower bound is returned as an `xsd:dateTime` with the given timezone or UTC-14:00 if no timezone is specified.
+
+If the input `$period` is an `xsd:gYearMonth`, it is interpreted as a period from the start of that month (00:00:00.000 on the first day) to the end of that month (23:59:59.999 on the last day), and the inclusive lower bound is returned as an `xsd:dateTime` with the given timezone or UTC-14:00 if no timezone is specified.
+
+If the input `$period` is an `xsd:gYear`, it is interpreted as a period from the start of that year (00:00:00.000 on January 1st) to the end of that year (23:59:59.999 on December 31st), and the inclusive lower bound is returned as an `xsd:dateTime` with the given timezone or UTC-14:00 if no timezone is specified.
+
+
+**Examples**
+
+<div class="example">
+The expression `time-fn:periodMinInclusive("2025-06-30T09:00:00.000Z"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.000Z"^^xsd:dateTime`.
+
+The expression `time-fn:periodMinInclusive("2025-06-30T09:00:00.000"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.000-14:00"^^xsd:dateTime`.
+
+The expression `time-fn:periodMinInclusive("2025-06-30Z"^^xsd:date)` returns `"2025-06-30T00:00:00.000Z"^^xsd:dateTime`.
+
+The expression `time-fn:periodMinInclusive("2025-06-30"^^xsd:date)` returns `"2025-06-30T00:00:00.000-14:00"^^xsd:dateTime`.
+
+The expression `time-fn:periodMinInclusive("2025-06Z"^^xsd:gYearMonth)` returns `"2025-06-01T00:00:00.000Z"^^xsd:dateTime`.
+
+The expression `time-fn:periodMinInclusive("2025-06"^^xsd:gYearMonth)` returns `"2025-06-01T00:00:00.000-14:00"^^xsd:dateTime`.
+
+The expression `time-fn:periodMinInclusive("2025Z"^^xsd:gYear)` returns `"2025-01-01T00:00:00.000Z"^^xsd:dateTime`.
+
+The expression `time-fn:periodMinInclusive("2025"^^xsd:gYear)` returns `"2025-01-01T00:00:00.000-14:00"^^xsd:dateTime`.
+
+</div>
+
+
+## time-fn:periodMaxInclusive
+
+**Summary**
+
+Returns the inclusive upper bound of a time period.
+
+**Signature**
+
+```xquery
+time-fn:periodMaxInclusive(
+    $period as xsd:dateTime | xsd:date | xsd:gYearMonth | xsd:gYear
+) as xsd:dateTime
+```
+
+**Properties**
+
+This function is [deterministic](https://www.w3.org/TR/xpath-functions-31/#dt-deterministic), [context-independent](https://www.w3.org/TR/xpath-functions-31/#dt-context-independent), and [focus-independent](https://www.w3.org/TR/xpath-functions-31/#dt-focus-independent).
+
+**Rules**
+
+The function `time-fn:periodMaxInclusive` takes a time period as input and returns the inclusive upper bound of that period as an `xsd:dateTime`.
+The input `$period` can be of type `xsd:dateTime`, `xsd:date`, `xsd:gYearMonth`, or `xsd:gYear`.
+
+If the input `$period` is an `xsd:dateTime` and has a timezone, the function returns the same value.
+Otherwise, if the input is an `xsd:dateTime` but has no explicit timezone, the input is interpreted as a period of -14 hours to +14 hours around the given dateTime, and the inclusive upper bound is returned as the `xsd:dateTime` with a timezone of UTC+14:00.
+
+If the input `$period` is an `xsd:date`, it is interpreted as a period from the start of that date (00:00:00.000) to the end of that date (23:59:59.999), and the inclusive upper bound is returned as an `xsd:dateTime` with the given timezone or UTC+14:00 if no timezone is specified.
+
+If the input `$period` is an `xsd:gYearMonth`, it is interpreted as a period from the start of that month (00:00:00.000 on the first day) to the end of that month (23:59:59.999 on the last day), and the inclusive upper bound is returned as an `xsd:dateTime` with the given timezone or UTC+14:00 if no timezone is specified.
+
+If the input `$period` is an `xsd:gYear`, it is interpreted as a period from the start of that year (00:00:00.000 on January 1st) to the end of that year (23:59:59.999 on December 31st), and the inclusive upper bound is returned as an `xsd:dateTime` with the given timezone or UTC+14:00 if no timezone is specified.
+
+
+**Examples**
+
+<div class="example">
+The expression `time-fn:periodMaxInclusive("2025-06-30T09:00:00.000Z"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.000Z"^^xsd:dateTime`.
+
+The expression `time-fn:periodMaxInclusive("2025-06-30T09:00:00.000"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.000+14:00"^^xsd:dateTime`.
+
+The expression `time-fn:periodMaxInclusive("2025-06-30Z"^^xsd:date)` returns `"2025-06-30T23:59:59.999Z"^^xsd:dateTime`.
+
+The expression `time-fn:periodMaxInclusive("2025-06-30"^^xsd:date)` returns `"2025-06-30T23:59:59.999+14:00"^^xsd:dateTime`.
+
+The expression `time-fn:periodMaxInclusive("2025-06Z"^^xsd:gYearMonth)` returns `"2025-06-30T23:59:59.999Z"^^xsd:dateTime`.
+
+The expression `time-fn:periodMaxInclusive("2025-06"^^xsd:gYearMonth)` returns `"2025-06-30T23:59:59.999+14:00"^^xsd:dateTime`.
+
+The expression `time-fn:periodMaxInclusive("2025Z"^^xsd:gYear)` returns `"2025-12-31T23:59:59.999Z"^^xsd:dateTime`.
+
+The expression `time-fn:periodMaxInclusive("2025"^^xsd:gYear)` returns `"2025-12-31T23:59:59.999+14:00"^^xsd:dateTime`.
+
+</div>
+
+
+## time-fn:periodMinExclusive
+
+**Summary**
+
+Returns the exclusive lower bound of a time period.
+
+**Signature**
+
+```xquery
+time-fn:periodMinExclusive(
+    $period as xsd:dateTime | xsd:date | xsd:gYearMonth | xsd:gYear
+) as xsd:dateTime
+```
+
+**Properties**
+
+This function is [deterministic](https://www.w3.org/TR/xpath-functions-31/#dt-deterministic), [context-independent](https://www.w3.org/TR/xpath-functions-31/#dt-context-independent), and [focus-independent](https://www.w3.org/TR/xpath-functions-31/#dt-focus-independent).
+
+**Rules**
+
+The function `time-fn:periodMinExclusive` takes a time period as input and returns the exclusive lower bound of that period as an `xsd:dateTime`.
+The input `$period` can be of type `xsd:dateTime`, `xsd:date`, `xsd:gYearMonth`, or `xsd:gYear`.
+
+If the input `$period` is an `xsd:dateTime` and has a timezone, the function returns the same value.
+Otherwise, if the input is an `xsd:dateTime` but has no explicit timezone, the input is interpreted as a period of -14 hours to +14 hours around the given dateTime, and the exclusive lower bound is returned as the `xsd:dateTime` with a timezone of UTC-14:00.
+
+If the input `$period` is an `xsd:date`, it is interpreted as a period from the start of that date (00:00:00.000) to the end of that date (23:59:59.999), and the exclusive lower bound is returned as an `xsd:dateTime` with the given timezone or UTC-14:00 if no timezone is specified.
+
+If the input `$period` is an `xsd:gYearMonth`, it is interpreted as a period from the start of that month (00:00:00.000 on the first day) to the end of that month (23:59:59.999 on the last day), and the exclusive lower bound is returned as an `xsd:dateTime` with the given timezone or UTC-14:00 if no timezone is specified.
+
+If the input `$period` is an `xsd:gYear`, it is interpreted as a period from the start of that year (00:00:00.000 on January 1st) to the end of that year (23:59:59.999 on December 31st), and the exclusive lower bound is returned as an `xsd:dateTime` with the given timezone or UTC-14:00 if no timezone is specified.
+
+
+**Examples**
+
+<div class="example">
+The expression `time-fn:periodMinExclusive("2025-06-30T09:00:00.000Z"^^xsd:dateTime)` returns `"2025-06-30T08:59:59.999Z"^^xsd:dateTime`.
+
+The expression `time-fn:periodMinExclusive("2025-06-30T09:00:00.000"^^xsd:dateTime)` returns `"2025-06-30T08:59:59.999-14:00"^^xsd:dateTime`.
+
+The expression `time-fn:periodMinExclusive("2025-06-30Z"^^xsd:date)` returns `"2025-06-29T23:59:59.999Z"^^xsd:dateTime`.
+
+The expression `time-fn:periodMinExclusive("2025-06-30"^^xsd:date)` returns `"2025-06-29T23:59:59.999-14:00"^^xsd:dateTime`.
+
+The expression `time-fn:periodMinExclusive("2025-06Z"^^xsd:gYearMonth)` returns `"2025-05-31T23:59:59.999Z"^^xsd:dateTime`.
+
+The expression `time-fn:periodMinExclusive("2025-06"^^xsd:gYearMonth)` returns `"2025-05-31T23:59:59.999-14:00"^^xsd:dateTime`.
+
+The expression `time-fn:periodMinExclusive("2025Z"^^xsd:gYear)` returns `"2024-12-31T23:59:59.999Z"^^xsd:dateTime`.
+
+The expression `time-fn:periodMinExclusive("2025"^^xsd:gYear)` returns `"2024-12-31T23:59:59.999-14:00"^^xsd:dateTime`.
+
+</div>
+
+
+## time-fn:periodMaxExclusive
+
+**Summary**
+
+Returns the exclusive upper bound of a time period.
+
+**Signature**
+
+```xquery
+time-fn:periodMaxExclusive(
+    $period as xsd:dateTime | xsd:date | xsd:gYearMonth | xsd:gYear
+) as xsd:dateTime
+```
+
+**Properties**
+
+This function is [deterministic](https://www.w3.org/TR/xpath-functions-31/#dt-deterministic), [context-independent](https://www.w3.org/TR/xpath-functions-31/#dt-context-independent), and [focus-independent](https://www.w3.org/TR/xpath-functions-31/#dt-focus-independent).
+
+**Rules**
+
+The function `time-fn:periodMaxExclusive` takes a time period as input and returns the exclusive upper bound of that period as an `xsd:dateTime`.
+The input `$period` can be of type `xsd:dateTime`, `xsd:date`, `xsd:gYearMonth`, or `xsd:gYear`.
+
+If the input `$period` is an `xsd:dateTime` and has a timezone, the function returns the same value.
+Otherwise, if the input is an `xsd:dateTime` but has no explicit timezone, the input is interpreted as a period of -14 hours to +14 hours around the given dateTime, and the exclusive upper bound is returned as the `xsd:dateTime` with a timezone of UTC+14:00.
+
+If the input `$period` is an `xsd:date`, it is interpreted as a period from the start of that date (00:00:00.000) to the end of that date (23:59:59.999), and the exclusive upper bound is returned as an `xsd:dateTime` with the given timezone or UTC+14:00 if no timezone is specified.
+
+If the input `$period` is an `xsd:gYearMonth`, it is interpreted as a period from the start of that month (00:00:00.000 on the first day) to the end of that month (23:59:59.999 on the last day), and the exclusive upper bound is returned as an `xsd:dateTime` with the given timezone or UTC+14:00 if no timezone is specified.
+
+If the input `$period` is an `xsd:gYear`, it is interpreted as a period from the start of that year (00:00:00.000 on January 1st) to the end of that year (23:59:59.999 on December 31st), and the exclusive upper bound is returned as an `xsd:dateTime` with the given timezone or UTC+14:00 if no timezone is specified.
+
+
+**Examples**
+
+<div class="example">
+The expression `time-fn:periodMaxExclusive("2025-06-30T09:00:00.000Z"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.001Z"^^xsd:dateTime`.
+
+The expression `time-fn:periodMaxExclusive("2025-06-30T09:00:00.000"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.001+14:00"^^xsd:dateTime`.
+
+The expression `time-fn:periodMaxExclusive("2025-06-30Z"^^xsd:date)` returns `"2025-07-01T00:00:00.000Z"^^xsd:dateTime`.
+
+The expression `time-fn:periodMaxExclusive("2025-06-30"^^xsd:date)` returns `"2025-07-01T00:00:00.000+14:00"^^xsd:dateTime`.
+
+The expression `time-fn:periodMaxExclusive("2025-06Z"^^xsd:gYearMonth)` returns `"2025-07-01T00:00:00.000Z"^^xsd:dateTime`.
+
+The expression `time-fn:periodMaxExclusive("2025-06"^^xsd:gYearMonth)` returns `"2025-07-01T00:00:00.000+14:00"^^xsd:dateTime`.
+
+The expression `time-fn:periodMaxExclusive("2025Z"^^xsd:gYear)` returns `"2026-01-01T00:00:00.000Z"^^xsd:dateTime`.
+
+The expression `time-fn:periodMaxExclusive("2025"^^xsd:gYear)` returns `"2026-01-01T00:00:00.000+14:00"^^xsd:dateTime`.
+
+</div>
+
+
+## time-fn:bindDefaultTimezone
+
+**Summary**
+
+Bind a default timezone to a time literal if no explicit timezone was indicated in the time literal.
+
+**Signature**
+
+```xquery
+time-fn:bindDefaultTimezone(
+    $timeLiteral as xsd:dateTime | xsd:date | xsd:gYearMonth | xsd:gYear,
+    $defaultTimezone as xsd:string
+) as xsd:dateTime | xsd:date | xsd:gYearMonth | xsd:gYear
+```
+
+**Properties**
+
+This function is [deterministic](https://www.w3.org/TR/xpath-functions-31/#dt-deterministic), [context-independent](https://www.w3.org/TR/xpath-functions-31/#dt-context-independent), and [focus-independent](https://www.w3.org/TR/xpath-functions-31/#dt-focus-independent).
+
+**Rules**
+
+The function `time-fn:bindDefaultTimezone` takes a time literal and a default timezone as input and returns the time literal with the default timezone bound to it if no explicit timezone was indicated in the time literal.
+The input `$timeLiteral` can be of type `xsd:dateTime`, `xsd:date`, `xsd:gYearMonth`, or `xsd:gYear`.
+The input `$defaultTimezone` is a string representing the default timezone, typically in the format `+HH:MM` or `-HH:MM`, or `Z` for UTC.
+
+If the input `$timeLiteral` has a timezone, the function returns the same value.
+Otherwise, if the input is an `xsd:dateTime`, `xsd:date`, `xsd:gYearMonth`, or `xsd:gYear` without a timezone, the function binds the default timezone to the time literal and returns it as an `xsd:dateTime`, `xsd:date`, `xsd:gYearMonth`, or `xsd:gYear` with the specified timezone.
+
+
+**Examples**
+
+<div class="example">
+The expression `time-fn:bindDefaultTimezone("2025-06-30T09:00:00.000Z"^^xsd:dateTime, "+02:00")` returns `"2025-06-30T09:00:00.000Z"^^xsd:dateTime`.
+
+The expression `time-fn:bindDefaultTimezone("2025-06-30T09:00:00.000"^^xsd:dateTime, "+02:00")` returns `"2025-06-30T09:00:00.000+02:00"^^xsd:dateTime`.
+
+The expression `time-fn:bindDefaultTimezone("2025-06-30Z"^^xsd:date, "+02:00")` returns `"2025-06-30Z"^^xsd:date`.
+
+The expression `time-fn:bindDefaultTimezone("2025-06-30"^^xsd:date, "+02:00")` returns `"2025-06-30+02:00"^^xsd:date`.
+
+</div>
+
+
+
+<pre class=biblio>
+{
+    "XQuery-Functions": {
+        "href": "https://www.w3.org/TR/xpath-functions-31/#func-signatures",
+        "title": "XPath and XQuery Functions and Operators 3.1: Function signatures and descriptions",
+        "authors": [
+            "Michael Kay"
+        ]
+    },
+    "XMLSchema": {
+        "href": "https://www.w3.org/TR/xmlschema-2/",
+        "title": "XML Schema Part 2: Datatypes Second Edition",
+        "authors": [
+            "Paul V. Biron",
+            "Ashok Malhotra"
+        ]
+    }
+}
+</pre>
