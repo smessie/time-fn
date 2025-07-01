@@ -34,14 +34,14 @@
 
 ### https://w3id.org/time-fn/periodMinInclusive
 time-fn:periodMinInclusive a skos:Concept, fno:Function ;
-                            skos:inScheme time-fn: ;
-                            skos:prefLabel "periodMinInclusive"@en ;
-                            skos:definition "Returns the inclusive lower bound of a time period."@en ;
-                            rdfs:label "periodMinInclusive"@en ;
-                            rdfs:comment "Returns the inclusive lower bound of a time period."@en ;
-                            fno:name "periodMinInclusive"@en ;
-                            fno:expects ( time-fn:period_param1 ) ;
-                            fno:returns ( time-fn:period_output ) .
+                           skos:inScheme time-fn: ;
+                           skos:prefLabel "periodMinInclusive"@en ;
+                           skos:definition "Returns the inclusive lower bound of a time period."@en ;
+                           rdfs:label "periodMinInclusive"@en ;
+                           rdfs:comment "Returns the inclusive lower bound of a time period."@en ;
+                           fno:name "periodMinInclusive"@en ;
+                           fno:expects ( time-fn:period_param1 ) ;
+                           fno:returns ( time-fn:period_output ) .
 
 time-fn:period_param1 a fno:Parameter ;
                         fno:type xsd:dateTime, xsd:date, xsd:gYearMonth, xsd:gYear ;
@@ -54,47 +54,47 @@ time-fn:period_output a fno:Output ;
 
 ### https://w3id.org/time-fn/periodMaxInclusive
 time-fn:periodMaxInclusive a skos:Concept, fno:Function ;
-                            skos:inScheme time-fn: ;
-                            skos:prefLabel "periodMaxInclusive"@en ;
-                            skos:definition "Returns the inclusive upper bound of a time period."@en ;
-                            rdfs:label "periodMaxInclusive"@en ;
-                            rdfs:comment "Returns the inclusive upper bound of a time period."@en ;
-                            fno:name "periodMaxInclusive"@en ;
-                            fno:expects ( time-fn:period_param1 ) ;
-                            fno:returns ( time-fn:period_output ) .
+                           skos:inScheme time-fn: ;
+                           skos:prefLabel "periodMaxInclusive"@en ;
+                           skos:definition "Returns the inclusive upper bound of a time period."@en ;
+                           rdfs:label "periodMaxInclusive"@en ;
+                           rdfs:comment "Returns the inclusive upper bound of a time period."@en ;
+                           fno:name "periodMaxInclusive"@en ;
+                           fno:expects ( time-fn:period_param1 ) ;
+                           fno:returns ( time-fn:period_output ) .
 
 ### https://w3id.org/time-fn/periodMinExclusive
 time-fn:periodMinExclusive a skos:Concept, fno:Function ;
-                            skos:inScheme time-fn: ;
-                            skos:prefLabel "periodMinExclusive"@en ;
-                            skos:definition "Returns the exclusive lower bound of a time period."@en ;
-                            rdfs:label "periodMinExclusive"@en ;
-                            rdfs:comment "Returns the exclusive lower bound of a time period."@en ;
-                            fno:name "periodMinExclusive"@en ;
-                            fno:expects ( time-fn:period_param1 ) ;
-                            fno:returns ( time-fn:period_output ) .
+                           skos:inScheme time-fn: ;
+                           skos:prefLabel "periodMinExclusive"@en ;
+                           skos:definition "Returns the exclusive lower bound of a time period."@en ;
+                           rdfs:label "periodMinExclusive"@en ;
+                           rdfs:comment "Returns the exclusive lower bound of a time period."@en ;
+                           fno:name "periodMinExclusive"@en ;
+                           fno:expects ( time-fn:period_param1 ) ;
+                           fno:returns ( time-fn:period_output ) .
 
 ### https://w3id.org/time-fn/periodMaxExclusive
 time-fn:periodMaxExclusive a skos:Concept, fno:Function ;
-                            skos:inScheme time-fn: ;
-                            skos:prefLabel "periodMaxExclusive"@en ;
-                            skos:definition "Returns the exclusive upper bound of a time period."@en ;
-                            rdfs:label "periodMaxExclusive"@en ;
-                            rdfs:comment "Returns the exclusive upper bound of a time period."@en ;
-                            fno:name "periodMaxExclusive"@en ;
-                            fno:expects ( time-fn:period_param1 ) ;
-                            fno:returns ( time-fn:period_output ) .
+                           skos:inScheme time-fn: ;
+                           skos:prefLabel "periodMaxExclusive"@en ;
+                           skos:definition "Returns the exclusive upper bound of a time period."@en ;
+                           rdfs:label "periodMaxExclusive"@en ;
+                           rdfs:comment "Returns the exclusive upper bound of a time period."@en ;
+                           fno:name "periodMaxExclusive"@en ;
+                           fno:expects ( time-fn:period_param1 ) ;
+                           fno:returns ( time-fn:period_output ) .
 
 ### https://w3id.org/time-fn/bindDefaultTimezone
 time-fn:bindDefaultTimezone a skos:Concept, fno:Function ;
-                        skos:inScheme time-fn: ;
-                        skos:prefLabel "bindDefaultTimezone"@en ;
-                        skos:definition "Bind a default timezone to a time literal if no explicit timezone was indicated in the time literal."@en ;
-                        rdfs:label "bindDefaultTimezone"@en ;
-                        rdfs:comment "Bind a default timezone to a time literal if no explicit timezone was indicated in the time literal."@en ;
-                        fno:name "bindDefaultTimezone"@en ;
-                        fno:expects ( time-fn:defaultTimezone_param1 time-fn:defaultTimezone_param2 ) ;
-                        fno:returns ( time-fn:defaultTimezone_output ) .
+                            skos:inScheme time-fn: ;
+                            skos:prefLabel "bindDefaultTimezone"@en ;
+                            skos:definition "Bind a default timezone to a time literal if no explicit timezone was indicated in the time literal."@en ;
+                            rdfs:label "bindDefaultTimezone"@en ;
+                            rdfs:comment "Bind a default timezone to a time literal if no explicit timezone was indicated in the time literal."@en ;
+                            fno:name "bindDefaultTimezone"@en ;
+                            fno:expects ( time-fn:defaultTimezone_param1 time-fn:defaultTimezone_param2 ) ;
+                            fno:returns ( time-fn:defaultTimezone_output ) .
 
 time-fn:defaultTimezone_param1 a fno:Parameter ;
                                fno:type xsd:dateTime, xsd:date, xsd:gYearMonth, xsd:gYear ;
