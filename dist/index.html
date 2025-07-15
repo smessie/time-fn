@@ -1490,7 +1490,7 @@ Possible extra rowspan handling
 </style>
   <meta content="Bikeshed version 40c07fe, updated Mon Jun 30 13:04:37 2025 +0200" name="generator">
   <link href="https://w3id.org/time-fn/" rel="canonical">
-  <meta content="6d4efd5c9f78700290bd12d2eacc8bc4e8520b6a" name="revision">
+  <meta content="b71eb6585ffee77182e8a73f4682b9dd622cb279" name="revision">
   <meta content="dark light" name="color-scheme">
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -2019,7 +2019,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 </p>
    <h1 class="p-name no-ref" id="title">Time Functions</h1>
    <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Living Document,
-    <time class="dt-updated" datetime="2025-06-30">30 June 2025</time></span></h2>
+    <time class="dt-updated" datetime="2025-07-15">15 July 2025</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>Issue Tracking:
@@ -2032,7 +2032,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p class="copyright" data-fill-with="copyright"><a href="http://creativecommons.org/publicdomain/zero/1.0/" rel="license"><img alt="CC0" height="15" src="https://licensebuttons.net/p/zero/1.0/80x15.png" width="80"></a>
 To the extent possible under law, the editors have waived all copyright
 and related or neighboring rights to this work.
-In addition, as of 30 June 2025,
+In addition, as of 15 July 2025,
 the editors have made this specification available under the
 <a href="https://www.openwebfoundation.org/the-agreements/the-owf-1-0-agreements-granted-claims/owfa-1-0" rel="license">Open Web Foundation Agreement Version 1.0</a>,
 which is available at https://www.openwebfoundation.org/the-agreements/the-owf-1-0-agreements-granted-claims/owfa-1-0.
@@ -2051,16 +2051,16 @@ Parts of this work may be from another specification document.  If so, those par
     <li>
      <a href="#introduction"><span class="secno">1</span> <span class="content">Introduction</span></a>
      <ol class="toc">
-      <li><a href="#function-signatures-and-descriptions"><span class="secno">1.1</span> <span class="content">Function signatures and descriptions</span></a>
+      <li><a href="#function-signatures"><span class="secno">1.1</span> <span class="content">Function signatures and descriptions</span></a>
      </ol>
     <li>
      <a href="#time-functions"><span class="secno">2</span> <span class="content">Time Functions</span></a>
      <ol class="toc">
-      <li><a href="#time-fnperiodmininclusive"><span class="secno">2.1</span> <span class="content">time-fn:periodMinInclusive</span></a>
-      <li><a href="#time-fnperiodmaxinclusive"><span class="secno">2.2</span> <span class="content">time-fn:periodMaxInclusive</span></a>
-      <li><a href="#time-fnperiodminexclusive"><span class="secno">2.3</span> <span class="content">time-fn:periodMinExclusive</span></a>
-      <li><a href="#time-fnperiodmaxexclusive"><span class="secno">2.4</span> <span class="content">time-fn:periodMaxExclusive</span></a>
-      <li><a href="#time-fnbinddefaulttimezone"><span class="secno">2.5</span> <span class="content">time-fn:bindDefaultTimezone</span></a>
+      <li><a href="#periodMinInclusive"><span class="secno">2.1</span> <span class="content">time-fn:periodMinInclusive</span></a>
+      <li><a href="#periodMaxInclusive"><span class="secno">2.2</span> <span class="content">time-fn:periodMaxInclusive</span></a>
+      <li><a href="#periodMinExclusive"><span class="secno">2.3</span> <span class="content">time-fn:periodMinExclusive</span></a>
+      <li><a href="#periodMaxExclusive"><span class="secno">2.4</span> <span class="content">time-fn:periodMaxExclusive</span></a>
+      <li><a href="#bindDefaultTimezone"><span class="secno">2.5</span> <span class="content">time-fn:bindDefaultTimezone</span></a>
      </ol>
     <li><a href="#conformance"><span class="secno"></span> <span class="content">
     Conformance</span></a>
@@ -2076,12 +2076,16 @@ Parts of this work may be from another specification document.  If so, those par
    <p>The Time Functions ontology’s namespace is <a href="https://w3id.org/time-fn/">https://w3id.org/time-fn/</a>.</p>
    <p>The preferred namespace prefix is <code>time-fn:</code>.</p>
    <p>The current version of the ontology specified in this document is <code>1.0.0</code>.</p>
+   <p>A Turtle version of the ontology is available <a href="time-fn.ttl">here</a>.</p>
    <h2 class="heading settled" data-level="1" id="introduction"><span class="secno">1. </span><span class="content">Introduction</span><a class="self-link" href="#introduction"></a></h2>
    <p>The Time Functions ontology offers a set of functions tailored to manage time literals in RDF and SPARQL. It addresses the need for manipulating time periods, including those without a designated timezone, and facilitates the retrieval of inclusive or exclusive bounds for these periods.</p>
-   <p>This functionality enables the comparison of time literals in SPARQL queries by mapping time periods, not necessarily <code>xsd:dateTime</code> literals, to specific <code>xsd:dateTime</code> values with an explicit timezone.</p>
+   <p>This functionality enables the comparison of time literals in SPARQL queries by mapping time periods (e.g., <code>xsd:gYear</code>, <code>xsd:gYearMonth</code>, and <code>xsd:date</code>) to specific <code>xsd:dateTime</code> values with an explicit timezone.</p>
    <p>These functions are particularly useful for working with time periods that may include partial dateTimes, such as <code>xsd:gYear</code>, <code>xsd:gYearMonth</code>, and <code>xsd:date</code>, and for handling dateTimes that lack a specified timezone.</p>
    <p>In addition to mapping time periods to specific <code>xsd:dateTime</code> values based on their inclusive or exclusive bounds, a function is also provided to assign a default timezone to time literals without a specified timezone.</p>
-   <h3 class="heading settled" data-level="1.1" id="function-signatures-and-descriptions"><span class="secno">1.1. </span><span class="content">Function signatures and descriptions</span><a class="self-link" href="#function-signatures-and-descriptions"></a></h3>
+   <p>When using these functions on a date <code>"2025-06-30"^^xsd:date</code>, the inclusive lower bound is interpreted as <code>"2025-06-30T00:00:00.000-14:00"^^xsd:dateTime</code>, and the inclusive upper bound is interpreted as <code>"2025-06-30T23:59:59.999+14:00"^^xsd:dateTime</code>.
+The exclusive lower bound is interpreted as <code>"2025-06-29T23:59:59.999-14:00"^^xsd:dateTime</code>, and the exclusive upper bound is interpreted as <code>"2025-07-01T00:00:00.000+14:00"^^xsd:dateTime</code>.
+When binding a default timezone <code>"+02:00"</code> to a time literal without an explicit timezone, the date <code>"2025-06-30"^^xsd:date</code> becomes <code>"2025-06-30+02:00"^^xsd:date</code>, and the dateTime <code>"2025-06-30T09:00:00.000"^^xsd:dateTime</code> becomes <code>"2025-06-30T09:00:00.000+02:00"^^xsd:dateTime</code>.</p>
+   <h3 class="heading settled" data-level="1.1" id="function-signatures"><span class="secno">1.1. </span><span class="content">Function signatures and descriptions</span><a class="self-link" href="#function-signatures"></a></h3>
    <p>Each function in the Time Functions ontology is defined in this document according to a similar standard proforma as defined in <a data-biblio-display="inline" data-link-type="biblio" href="https://www.w3.org/TR/xpath-functions-31/#func-signatures"><cite>XPath and XQuery Functions and Operators 3.1: Function signatures and descriptions</cite></a>.</p>
    <p>Each function definition follows the structure:</p>
 <pre class="language-xquery highlight"><c- nf>time-fn:function-name</c-><c- p>(</c-><c- g>$</c-><c- n>parameter-name</c-> <c- k>as</c-> <c- b>parameter-type</c-><c- p>,</c-> <c- p>..</c-><c- o>.</c-><c- p>)</c-> <c- k>as</c-> <c- k>return</c-><c- p>-</c-><c- f>type</c->
@@ -2099,7 +2103,7 @@ Parts of this work may be from another specification document.  If so, those par
    </ul>
    <h2 class="heading settled" data-level="2" id="time-functions"><span class="secno">2. </span><span class="content">Time Functions</span><a class="self-link" href="#time-functions"></a></h2>
    <p>This section lists all the functions defined in the Time Functions ontology operating on the <a data-biblio-display="inline" data-link-type="biblio" href="https://www.w3.org/TR/xmlschema-2/"><cite>XML Schema Part 2: Datatypes Second Edition</cite></a> date and time types <code>xsd:dateTime</code>, <code>xsd:date</code>, <code>xsd:gYearMonth</code>, and <code>xsd:gYear</code>.</p>
-   <h3 class="heading settled" data-level="2.1" id="time-fnperiodmininclusive"><span class="secno">2.1. </span><span class="content">time-fn:periodMinInclusive</span><a class="self-link" href="#time-fnperiodmininclusive"></a></h3>
+   <h3 class="heading settled" data-level="2.1" id="periodMinInclusive"><span class="secno">2.1. </span><span class="content">time-fn:periodMinInclusive</span><a class="self-link" href="#periodMinInclusive"></a></h3>
    <p><strong>Summary</strong></p>
    <p>Returns the inclusive lower bound of a time period.</p>
    <p><strong>Signature</strong></p>
@@ -2131,7 +2135,7 @@ The expression <code>time-fn:periodMinInclusive("2025-06-30T09:00:00.000Z"^^xsd:
     <p>The expression <code>time-fn:periodMinInclusive("2025Z"^^xsd:gYear)</code> returns <code>"2025-01-01T00:00:00.000Z"^^xsd:dateTime</code>.</p>
     <p>The expression <code>time-fn:periodMinInclusive("2025"^^xsd:gYear)</code> returns <code>"2025-01-01T00:00:00.000-14:00"^^xsd:dateTime</code>.</p>
    </div>
-   <h3 class="heading settled" data-level="2.2" id="time-fnperiodmaxinclusive"><span class="secno">2.2. </span><span class="content">time-fn:periodMaxInclusive</span><a class="self-link" href="#time-fnperiodmaxinclusive"></a></h3>
+   <h3 class="heading settled" data-level="2.2" id="periodMaxInclusive"><span class="secno">2.2. </span><span class="content">time-fn:periodMaxInclusive</span><a class="self-link" href="#periodMaxInclusive"></a></h3>
    <p><strong>Summary</strong></p>
    <p>Returns the inclusive upper bound of a time period.</p>
    <p><strong>Signature</strong></p>
@@ -2163,7 +2167,7 @@ The expression <code>time-fn:periodMaxInclusive("2025-06-30T09:00:00.000Z"^^xsd:
     <p>The expression <code>time-fn:periodMaxInclusive("2025Z"^^xsd:gYear)</code> returns <code>"2025-12-31T23:59:59.999Z"^^xsd:dateTime</code>.</p>
     <p>The expression <code>time-fn:periodMaxInclusive("2025"^^xsd:gYear)</code> returns <code>"2025-12-31T23:59:59.999+14:00"^^xsd:dateTime</code>.</p>
    </div>
-   <h3 class="heading settled" data-level="2.3" id="time-fnperiodminexclusive"><span class="secno">2.3. </span><span class="content">time-fn:periodMinExclusive</span><a class="self-link" href="#time-fnperiodminexclusive"></a></h3>
+   <h3 class="heading settled" data-level="2.3" id="periodMinExclusive"><span class="secno">2.3. </span><span class="content">time-fn:periodMinExclusive</span><a class="self-link" href="#periodMinExclusive"></a></h3>
    <p><strong>Summary</strong></p>
    <p>Returns the exclusive lower bound of a time period.</p>
    <p><strong>Signature</strong></p>
@@ -2195,7 +2199,7 @@ The expression <code>time-fn:periodMinExclusive("2025-06-30T09:00:00.000Z"^^xsd:
     <p>The expression <code>time-fn:periodMinExclusive("2025Z"^^xsd:gYear)</code> returns <code>"2024-12-31T23:59:59.999Z"^^xsd:dateTime</code>.</p>
     <p>The expression <code>time-fn:periodMinExclusive("2025"^^xsd:gYear)</code> returns <code>"2024-12-31T23:59:59.999-14:00"^^xsd:dateTime</code>.</p>
    </div>
-   <h3 class="heading settled" data-level="2.4" id="time-fnperiodmaxexclusive"><span class="secno">2.4. </span><span class="content">time-fn:periodMaxExclusive</span><a class="self-link" href="#time-fnperiodmaxexclusive"></a></h3>
+   <h3 class="heading settled" data-level="2.4" id="periodMaxExclusive"><span class="secno">2.4. </span><span class="content">time-fn:periodMaxExclusive</span><a class="self-link" href="#periodMaxExclusive"></a></h3>
    <p><strong>Summary</strong></p>
    <p>Returns the exclusive upper bound of a time period.</p>
    <p><strong>Signature</strong></p>
@@ -2227,7 +2231,7 @@ The expression <code>time-fn:periodMaxExclusive("2025-06-30T09:00:00.000Z"^^xsd:
     <p>The expression <code>time-fn:periodMaxExclusive("2025Z"^^xsd:gYear)</code> returns <code>"2026-01-01T00:00:00.000Z"^^xsd:dateTime</code>.</p>
     <p>The expression <code>time-fn:periodMaxExclusive("2025"^^xsd:gYear)</code> returns <code>"2026-01-01T00:00:00.000+14:00"^^xsd:dateTime</code>.</p>
    </div>
-   <h3 class="heading settled" data-level="2.5" id="time-fnbinddefaulttimezone"><span class="secno">2.5. </span><span class="content">time-fn:bindDefaultTimezone</span><a class="self-link" href="#time-fnbinddefaulttimezone"></a></h3>
+   <h3 class="heading settled" data-level="2.5" id="bindDefaultTimezone"><span class="secno">2.5. </span><span class="content">time-fn:bindDefaultTimezone</span><a class="self-link" href="#bindDefaultTimezone"></a></h3>
    <p><strong>Summary</strong></p>
    <p>Bind a default timezone to a time literal if no explicit timezone was indicated in the time literal.</p>
    <p><strong>Signature</strong></p>
