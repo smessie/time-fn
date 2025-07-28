@@ -6,14 +6,14 @@ Status: LD
 Editor: Ieben Smessaert, Ghent University - imec http://idlab.ugent.be/, ieben.smessaert@ugent.be
 Abstract: This document defines a set of Time Functions that can be utilized in SPARQL queries to manipulate time literals. These functions enable the explicit specification of timezones for time periods, including partial dateTimes like xsd:gYear, as well as dateTimes without a specified timezone. Additionally, they facilitate the retrieval of the inclusive or exclusive bounds of a time period.
 Markup Shorthands: markdown yes, css no
-Canonical URL: https://w3id.org/time-fn/
+Canonical URL: https://w3id.org/time-fn
 </pre>
 
 ## Namespace ## {#namespace}
 
-The Time Functions ontology's namespace is [https://w3id.org/time-fn/](https://w3id.org/time-fn/).
+The Time Functions ontology's namespace is [https://w3id.org/time-fn#](https://w3id.org/time-fn#).
 
-The preferred namespace prefix is `time-fn:`.
+The preferred namespace prefix is `tfn:`.
 
 The current version of the ontology specified in this document is `1.0.0`.
 
@@ -42,11 +42,11 @@ Each function in the Time Functions ontology is defined in this document accordi
 Each function definition follows the structure:
 
 ```xquery
-time-fn:function-name($parameter-name as parameter-type, ...) as return-type
+tfn:function-name($parameter-name as parameter-type, ...) as return-type
 ```
 
 Where:
-- `time-fn:function-name` is the name of the function.
+- `tfn:function-name` is the name of the function.
 - `$parameter-name` is the name of the parameter.
 - `parameter-type` is the type of the parameter, such as `xsd:dateTime`, `xsd:date`, or `xsd:gYear`.
 - `return-type` is the type of the return value, typically `xsd:dateTime`.
@@ -57,7 +57,7 @@ Where:
 This section lists all the functions defined in the Time Functions ontology operating on the [[!XMLSchema inline]] date and time types `xsd:dateTime`, `xsd:date`, `xsd:gYearMonth`, and `xsd:gYear`.
 
 
-## time-fn:periodMinInclusive ## {#periodMinInclusive}
+## tfn:periodMinInclusive ## {#periodMinInclusive}
 
 **Summary**
 
@@ -66,7 +66,7 @@ Returns the inclusive lower bound of a time period.
 **Signature**
 
 ```xquery
-time-fn:periodMinInclusive(
+tfn:periodMinInclusive(
     $period as xsd:dateTime | xsd:date | xsd:gYearMonth | xsd:gYear
 ) as xsd:dateTime
 ```
@@ -77,7 +77,7 @@ This function is [deterministic](https://www.w3.org/TR/xpath-functions-31/#dt-de
 
 **Rules**
 
-The function `time-fn:periodMinInclusive` takes a time period as input and returns the inclusive lower bound of that period as an `xsd:dateTime`.
+The function `tfn:periodMinInclusive` takes a time period as input and returns the inclusive lower bound of that period as an `xsd:dateTime`.
 The input `$period` can be of type `xsd:dateTime`, `xsd:date`, `xsd:gYearMonth`, or `xsd:gYear`.
 
 If the input `$period` is an `xsd:dateTime` and has a timezone, the function returns the same value.
@@ -93,26 +93,26 @@ If the input `$period` is an `xsd:gYear`, it is interpreted as a period from the
 **Examples**
 
 <div class="example">
-The expression `time-fn:periodMinInclusive("2025-06-30T09:00:00.000Z"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.000Z"^^xsd:dateTime`.
+The expression `tfn:periodMinInclusive("2025-06-30T09:00:00.000Z"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.000Z"^^xsd:dateTime`.
 
-The expression `time-fn:periodMinInclusive("2025-06-30T09:00:00.000"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.000-14:00"^^xsd:dateTime`.
+The expression `tfn:periodMinInclusive("2025-06-30T09:00:00.000"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.000-14:00"^^xsd:dateTime`.
 
-The expression `time-fn:periodMinInclusive("2025-06-30Z"^^xsd:date)` returns `"2025-06-30T00:00:00.000Z"^^xsd:dateTime`.
+The expression `tfn:periodMinInclusive("2025-06-30Z"^^xsd:date)` returns `"2025-06-30T00:00:00.000Z"^^xsd:dateTime`.
 
-The expression `time-fn:periodMinInclusive("2025-06-30"^^xsd:date)` returns `"2025-06-30T00:00:00.000-14:00"^^xsd:dateTime`.
+The expression `tfn:periodMinInclusive("2025-06-30"^^xsd:date)` returns `"2025-06-30T00:00:00.000-14:00"^^xsd:dateTime`.
 
-The expression `time-fn:periodMinInclusive("2025-06Z"^^xsd:gYearMonth)` returns `"2025-06-01T00:00:00.000Z"^^xsd:dateTime`.
+The expression `tfn:periodMinInclusive("2025-06Z"^^xsd:gYearMonth)` returns `"2025-06-01T00:00:00.000Z"^^xsd:dateTime`.
 
-The expression `time-fn:periodMinInclusive("2025-06"^^xsd:gYearMonth)` returns `"2025-06-01T00:00:00.000-14:00"^^xsd:dateTime`.
+The expression `tfn:periodMinInclusive("2025-06"^^xsd:gYearMonth)` returns `"2025-06-01T00:00:00.000-14:00"^^xsd:dateTime`.
 
-The expression `time-fn:periodMinInclusive("2025Z"^^xsd:gYear)` returns `"2025-01-01T00:00:00.000Z"^^xsd:dateTime`.
+The expression `tfn:periodMinInclusive("2025Z"^^xsd:gYear)` returns `"2025-01-01T00:00:00.000Z"^^xsd:dateTime`.
 
-The expression `time-fn:periodMinInclusive("2025"^^xsd:gYear)` returns `"2025-01-01T00:00:00.000-14:00"^^xsd:dateTime`.
+The expression `tfn:periodMinInclusive("2025"^^xsd:gYear)` returns `"2025-01-01T00:00:00.000-14:00"^^xsd:dateTime`.
 
 </div>
 
 
-## time-fn:periodMaxInclusive ## {#periodMaxInclusive}
+## tfn:periodMaxInclusive ## {#periodMaxInclusive}
 
 **Summary**
 
@@ -121,7 +121,7 @@ Returns the inclusive upper bound of a time period.
 **Signature**
 
 ```xquery
-time-fn:periodMaxInclusive(
+tfn:periodMaxInclusive(
     $period as xsd:dateTime | xsd:date | xsd:gYearMonth | xsd:gYear
 ) as xsd:dateTime
 ```
@@ -132,7 +132,7 @@ This function is [deterministic](https://www.w3.org/TR/xpath-functions-31/#dt-de
 
 **Rules**
 
-The function `time-fn:periodMaxInclusive` takes a time period as input and returns the inclusive upper bound of that period as an `xsd:dateTime`.
+The function `tfn:periodMaxInclusive` takes a time period as input and returns the inclusive upper bound of that period as an `xsd:dateTime`.
 The input `$period` can be of type `xsd:dateTime`, `xsd:date`, `xsd:gYearMonth`, or `xsd:gYear`.
 
 If the input `$period` is an `xsd:dateTime` and has a timezone, the function returns the same value.
@@ -148,26 +148,26 @@ If the input `$period` is an `xsd:gYear`, it is interpreted as a period from the
 **Examples**
 
 <div class="example">
-The expression `time-fn:periodMaxInclusive("2025-06-30T09:00:00.000Z"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.000Z"^^xsd:dateTime`.
+The expression `tfn:periodMaxInclusive("2025-06-30T09:00:00.000Z"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.000Z"^^xsd:dateTime`.
 
-The expression `time-fn:periodMaxInclusive("2025-06-30T09:00:00.000"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.000+14:00"^^xsd:dateTime`.
+The expression `tfn:periodMaxInclusive("2025-06-30T09:00:00.000"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.000+14:00"^^xsd:dateTime`.
 
-The expression `time-fn:periodMaxInclusive("2025-06-30Z"^^xsd:date)` returns `"2025-06-30T23:59:59.999Z"^^xsd:dateTime`.
+The expression `tfn:periodMaxInclusive("2025-06-30Z"^^xsd:date)` returns `"2025-06-30T23:59:59.999Z"^^xsd:dateTime`.
 
-The expression `time-fn:periodMaxInclusive("2025-06-30"^^xsd:date)` returns `"2025-06-30T23:59:59.999+14:00"^^xsd:dateTime`.
+The expression `tfn:periodMaxInclusive("2025-06-30"^^xsd:date)` returns `"2025-06-30T23:59:59.999+14:00"^^xsd:dateTime`.
 
-The expression `time-fn:periodMaxInclusive("2025-06Z"^^xsd:gYearMonth)` returns `"2025-06-30T23:59:59.999Z"^^xsd:dateTime`.
+The expression `tfn:periodMaxInclusive("2025-06Z"^^xsd:gYearMonth)` returns `"2025-06-30T23:59:59.999Z"^^xsd:dateTime`.
 
-The expression `time-fn:periodMaxInclusive("2025-06"^^xsd:gYearMonth)` returns `"2025-06-30T23:59:59.999+14:00"^^xsd:dateTime`.
+The expression `tfn:periodMaxInclusive("2025-06"^^xsd:gYearMonth)` returns `"2025-06-30T23:59:59.999+14:00"^^xsd:dateTime`.
 
-The expression `time-fn:periodMaxInclusive("2025Z"^^xsd:gYear)` returns `"2025-12-31T23:59:59.999Z"^^xsd:dateTime`.
+The expression `tfn:periodMaxInclusive("2025Z"^^xsd:gYear)` returns `"2025-12-31T23:59:59.999Z"^^xsd:dateTime`.
 
-The expression `time-fn:periodMaxInclusive("2025"^^xsd:gYear)` returns `"2025-12-31T23:59:59.999+14:00"^^xsd:dateTime`.
+The expression `tfn:periodMaxInclusive("2025"^^xsd:gYear)` returns `"2025-12-31T23:59:59.999+14:00"^^xsd:dateTime`.
 
 </div>
 
 
-## time-fn:periodMinExclusive ## {#periodMinExclusive}
+## tfn:periodMinExclusive ## {#periodMinExclusive}
 
 **Summary**
 
@@ -176,7 +176,7 @@ Returns the exclusive lower bound of a time period.
 **Signature**
 
 ```xquery
-time-fn:periodMinExclusive(
+tfn:periodMinExclusive(
     $period as xsd:dateTime | xsd:date | xsd:gYearMonth | xsd:gYear
 ) as xsd:dateTime
 ```
@@ -187,7 +187,7 @@ This function is [deterministic](https://www.w3.org/TR/xpath-functions-31/#dt-de
 
 **Rules**
 
-The function `time-fn:periodMinExclusive` takes a time period as input and returns the exclusive lower bound of that period as an `xsd:dateTime`.
+The function `tfn:periodMinExclusive` takes a time period as input and returns the exclusive lower bound of that period as an `xsd:dateTime`.
 The input `$period` can be of type `xsd:dateTime`, `xsd:date`, `xsd:gYearMonth`, or `xsd:gYear`.
 
 If the input `$period` is an `xsd:dateTime` and has a timezone, the function returns the same value.
@@ -203,26 +203,26 @@ If the input `$period` is an `xsd:gYear`, it is interpreted as a period from the
 **Examples**
 
 <div class="example">
-The expression `time-fn:periodMinExclusive("2025-06-30T09:00:00.000Z"^^xsd:dateTime)` returns `"2025-06-30T08:59:59.999Z"^^xsd:dateTime`.
+The expression `tfn:periodMinExclusive("2025-06-30T09:00:00.000Z"^^xsd:dateTime)` returns `"2025-06-30T08:59:59.999Z"^^xsd:dateTime`.
 
-The expression `time-fn:periodMinExclusive("2025-06-30T09:00:00.000"^^xsd:dateTime)` returns `"2025-06-30T08:59:59.999-14:00"^^xsd:dateTime`.
+The expression `tfn:periodMinExclusive("2025-06-30T09:00:00.000"^^xsd:dateTime)` returns `"2025-06-30T08:59:59.999-14:00"^^xsd:dateTime`.
 
-The expression `time-fn:periodMinExclusive("2025-06-30Z"^^xsd:date)` returns `"2025-06-29T23:59:59.999Z"^^xsd:dateTime`.
+The expression `tfn:periodMinExclusive("2025-06-30Z"^^xsd:date)` returns `"2025-06-29T23:59:59.999Z"^^xsd:dateTime`.
 
-The expression `time-fn:periodMinExclusive("2025-06-30"^^xsd:date)` returns `"2025-06-29T23:59:59.999-14:00"^^xsd:dateTime`.
+The expression `tfn:periodMinExclusive("2025-06-30"^^xsd:date)` returns `"2025-06-29T23:59:59.999-14:00"^^xsd:dateTime`.
 
-The expression `time-fn:periodMinExclusive("2025-06Z"^^xsd:gYearMonth)` returns `"2025-05-31T23:59:59.999Z"^^xsd:dateTime`.
+The expression `tfn:periodMinExclusive("2025-06Z"^^xsd:gYearMonth)` returns `"2025-05-31T23:59:59.999Z"^^xsd:dateTime`.
 
-The expression `time-fn:periodMinExclusive("2025-06"^^xsd:gYearMonth)` returns `"2025-05-31T23:59:59.999-14:00"^^xsd:dateTime`.
+The expression `tfn:periodMinExclusive("2025-06"^^xsd:gYearMonth)` returns `"2025-05-31T23:59:59.999-14:00"^^xsd:dateTime`.
 
-The expression `time-fn:periodMinExclusive("2025Z"^^xsd:gYear)` returns `"2024-12-31T23:59:59.999Z"^^xsd:dateTime`.
+The expression `tfn:periodMinExclusive("2025Z"^^xsd:gYear)` returns `"2024-12-31T23:59:59.999Z"^^xsd:dateTime`.
 
-The expression `time-fn:periodMinExclusive("2025"^^xsd:gYear)` returns `"2024-12-31T23:59:59.999-14:00"^^xsd:dateTime`.
+The expression `tfn:periodMinExclusive("2025"^^xsd:gYear)` returns `"2024-12-31T23:59:59.999-14:00"^^xsd:dateTime`.
 
 </div>
 
 
-## time-fn:periodMaxExclusive ## {#periodMaxExclusive}
+## tfn:periodMaxExclusive ## {#periodMaxExclusive}
 
 **Summary**
 
@@ -231,7 +231,7 @@ Returns the exclusive upper bound of a time period.
 **Signature**
 
 ```xquery
-time-fn:periodMaxExclusive(
+tfn:periodMaxExclusive(
     $period as xsd:dateTime | xsd:date | xsd:gYearMonth | xsd:gYear
 ) as xsd:dateTime
 ```
@@ -242,7 +242,7 @@ This function is [deterministic](https://www.w3.org/TR/xpath-functions-31/#dt-de
 
 **Rules**
 
-The function `time-fn:periodMaxExclusive` takes a time period as input and returns the exclusive upper bound of that period as an `xsd:dateTime`.
+The function `tfn:periodMaxExclusive` takes a time period as input and returns the exclusive upper bound of that period as an `xsd:dateTime`.
 The input `$period` can be of type `xsd:dateTime`, `xsd:date`, `xsd:gYearMonth`, or `xsd:gYear`.
 
 If the input `$period` is an `xsd:dateTime` and has a timezone, the function returns the same value.
@@ -258,26 +258,26 @@ If the input `$period` is an `xsd:gYear`, it is interpreted as a period from the
 **Examples**
 
 <div class="example">
-The expression `time-fn:periodMaxExclusive("2025-06-30T09:00:00.000Z"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.001Z"^^xsd:dateTime`.
+The expression `tfn:periodMaxExclusive("2025-06-30T09:00:00.000Z"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.001Z"^^xsd:dateTime`.
 
-The expression `time-fn:periodMaxExclusive("2025-06-30T09:00:00.000"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.001+14:00"^^xsd:dateTime`.
+The expression `tfn:periodMaxExclusive("2025-06-30T09:00:00.000"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.001+14:00"^^xsd:dateTime`.
 
-The expression `time-fn:periodMaxExclusive("2025-06-30Z"^^xsd:date)` returns `"2025-07-01T00:00:00.000Z"^^xsd:dateTime`.
+The expression `tfn:periodMaxExclusive("2025-06-30Z"^^xsd:date)` returns `"2025-07-01T00:00:00.000Z"^^xsd:dateTime`.
 
-The expression `time-fn:periodMaxExclusive("2025-06-30"^^xsd:date)` returns `"2025-07-01T00:00:00.000+14:00"^^xsd:dateTime`.
+The expression `tfn:periodMaxExclusive("2025-06-30"^^xsd:date)` returns `"2025-07-01T00:00:00.000+14:00"^^xsd:dateTime`.
 
-The expression `time-fn:periodMaxExclusive("2025-06Z"^^xsd:gYearMonth)` returns `"2025-07-01T00:00:00.000Z"^^xsd:dateTime`.
+The expression `tfn:periodMaxExclusive("2025-06Z"^^xsd:gYearMonth)` returns `"2025-07-01T00:00:00.000Z"^^xsd:dateTime`.
 
-The expression `time-fn:periodMaxExclusive("2025-06"^^xsd:gYearMonth)` returns `"2025-07-01T00:00:00.000+14:00"^^xsd:dateTime`.
+The expression `tfn:periodMaxExclusive("2025-06"^^xsd:gYearMonth)` returns `"2025-07-01T00:00:00.000+14:00"^^xsd:dateTime`.
 
-The expression `time-fn:periodMaxExclusive("2025Z"^^xsd:gYear)` returns `"2026-01-01T00:00:00.000Z"^^xsd:dateTime`.
+The expression `tfn:periodMaxExclusive("2025Z"^^xsd:gYear)` returns `"2026-01-01T00:00:00.000Z"^^xsd:dateTime`.
 
-The expression `time-fn:periodMaxExclusive("2025"^^xsd:gYear)` returns `"2026-01-01T00:00:00.000+14:00"^^xsd:dateTime`.
+The expression `tfn:periodMaxExclusive("2025"^^xsd:gYear)` returns `"2026-01-01T00:00:00.000+14:00"^^xsd:dateTime`.
 
 </div>
 
 
-## time-fn:bindDefaultTimezone ## {#bindDefaultTimezone}
+## tfn:bindDefaultTimezone ## {#bindDefaultTimezone}
 
 **Summary**
 
@@ -286,7 +286,7 @@ Bind a default timezone to a time literal if no explicit timezone was indicated 
 **Signature**
 
 ```xquery
-time-fn:bindDefaultTimezone(
+tfn:bindDefaultTimezone(
     $timeLiteral as xsd:dateTime | xsd:date | xsd:gYearMonth | xsd:gYear,
     $defaultTimezone as xsd:string
 ) as xsd:dateTime | xsd:date | xsd:gYearMonth | xsd:gYear
@@ -298,7 +298,7 @@ This function is [deterministic](https://www.w3.org/TR/xpath-functions-31/#dt-de
 
 **Rules**
 
-The function `time-fn:bindDefaultTimezone` takes a time literal and a default timezone as input and returns the time literal with the default timezone bound to it if no explicit timezone was indicated in the time literal.
+The function `tfn:bindDefaultTimezone` takes a time literal and a default timezone as input and returns the time literal with the default timezone bound to it if no explicit timezone was indicated in the time literal.
 The input `$timeLiteral` can be of type `xsd:dateTime`, `xsd:date`, `xsd:gYearMonth`, or `xsd:gYear`.
 The input `$defaultTimezone` is a string representing the default timezone, typically in the format `+HH:MM` or `-HH:MM`, or `Z` for UTC.
 
@@ -309,13 +309,13 @@ Otherwise, if the input is an `xsd:dateTime`, `xsd:date`, `xsd:gYearMonth`, or `
 **Examples**
 
 <div class="example">
-The expression `time-fn:bindDefaultTimezone("2025-06-30T09:00:00.000Z"^^xsd:dateTime, "+02:00")` returns `"2025-06-30T09:00:00.000Z"^^xsd:dateTime`.
+The expression `tfn:bindDefaultTimezone("2025-06-30T09:00:00.000Z"^^xsd:dateTime, "+02:00")` returns `"2025-06-30T09:00:00.000Z"^^xsd:dateTime`.
 
-The expression `time-fn:bindDefaultTimezone("2025-06-30T09:00:00.000"^^xsd:dateTime, "+02:00")` returns `"2025-06-30T09:00:00.000+02:00"^^xsd:dateTime`.
+The expression `tfn:bindDefaultTimezone("2025-06-30T09:00:00.000"^^xsd:dateTime, "+02:00")` returns `"2025-06-30T09:00:00.000+02:00"^^xsd:dateTime`.
 
-The expression `time-fn:bindDefaultTimezone("2025-06-30Z"^^xsd:date, "+02:00")` returns `"2025-06-30Z"^^xsd:date`.
+The expression `tfn:bindDefaultTimezone("2025-06-30Z"^^xsd:date, "+02:00")` returns `"2025-06-30Z"^^xsd:date`.
 
-The expression `time-fn:bindDefaultTimezone("2025-06-30"^^xsd:date, "+02:00")` returns `"2025-06-30+02:00"^^xsd:date`.
+The expression `tfn:bindDefaultTimezone("2025-06-30"^^xsd:date, "+02:00")` returns `"2025-06-30+02:00"^^xsd:date`.
 
 </div>
 
