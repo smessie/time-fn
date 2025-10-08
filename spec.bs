@@ -4,7 +4,7 @@ Shortname: time-fn
 Level: none
 Status: LD
 Editor: Ieben Smessaert, Ghent University - imec http://idlab.ugent.be/, ieben.smessaert@ugent.be
-Abstract: This document defines a set of Time Functions that can be utilized in SPARQL queries to manipulate time literals. These functions enable the explicit specification of timezones for time periods, including partial dateTimes like xsd:gYear, as well as dateTimes without a specified timezone. Additionally, they facilitate the retrieval of the inclusive or exclusive bounds of a time period.
+Abstract: This document defines a set of Time Functions that can be utilized in SPARQL queries to manipulate time literals. These functions enable the explicit specification of timezones for time periods, including partial time literals like xsd:gYear, as well as floating times, i.e., time literals without a specified timezone. Additionally, they facilitate the retrieval of the inclusive or exclusive bounds of a time period.
 Markup Shorthands: markdown yes, css no
 Canonical URL: https://w3id.org/time-fn
 </pre>
@@ -24,15 +24,15 @@ A Turtle version of the ontology is available [here](time-fn.ttl).
 
 The Time Functions ontology offers a set of functions tailored to manage time literals in RDF and SPARQL. It addresses the need for manipulating time periods, including those without a designated timezone, and facilitates the retrieval of inclusive or exclusive bounds for these periods.
 
-This functionality enables the comparison of time literals in SPARQL queries by mapping time periods (e.g., `xsd:gYear`, `xsd:gYearMonth`, and `xsd:date`) to specific `xsd:dateTime` values with an explicit timezone.
+This functionality enables the comparison and sorting of time literals in SPARQL queries by mapping time periods (e.g., `xsd:gYear`, `xsd:gYearMonth`, and `xsd:date`) to specific `xsd:dateTime` values with an explicit timezone.
 
-These functions are particularly useful for working with time periods that may include partial dateTimes, such as `xsd:gYear`, `xsd:gYearMonth`, and `xsd:date`, and for handling dateTimes that lack a specified timezone.
+These functions are particularly useful for working with time periods that may include partial time literals, such as `xsd:gYear`, `xsd:gYearMonth`, and `xsd:date`, and for handling floating times, i.e., time literals that lack a specified timezone.
 
 In addition to mapping time periods to specific `xsd:dateTime` values based on their inclusive or exclusive bounds, a function is also provided to assign a default timezone to time literals without a specified timezone.
 
-When using these functions on a date `"2025-06-30"^^xsd:date`, the inclusive lower bound is interpreted as `"2025-06-30T00:00:00.000-14:00"^^xsd:dateTime`, and the inclusive upper bound is interpreted as `"2025-06-30T23:59:59.999+14:00"^^xsd:dateTime`.
-The exclusive lower bound is interpreted as `"2025-06-29T23:59:59.999-14:00"^^xsd:dateTime`, and the exclusive upper bound is interpreted as `"2025-07-01T00:00:00.000+14:00"^^xsd:dateTime`.
-When binding a default timezone `"+02:00"` to a time literal without an explicit timezone, the date `"2025-06-30"^^xsd:date` becomes `"2025-06-30+02:00"^^xsd:date`, and the dateTime `"2025-06-30T09:00:00.000"^^xsd:dateTime` becomes `"2025-06-30T09:00:00.000+02:00"^^xsd:dateTime`.
+When using these functions on a date `"2025-06-30"^^xsd:date`, the inclusive lower bound is interpreted as `"2025-06-30T00:00:00.000+14:00"^^xsd:dateTime`, and the inclusive upper bound is interpreted as `"2025-06-30T23:59:59.999+-4:00"^^xsd:dateTime`.
+The exclusive lower bound is interpreted as `"2025-06-29T23:59:59.999+14:00"^^xsd:dateTime`, and the exclusive upper bound is interpreted as `"2025-07-01T00:00:00.000-14:00"^^xsd:dateTime`.
+When binding a default timezone `"+02:00"` to a time literal without an explicit timezone, the date `"2025-06-30"^^xsd:date` becomes `"2025-06-30+02:00"^^xsd:date`, and the time literal `"2025-06-30T09:00:00.000"^^xsd:dateTime` becomes `"2025-06-30T09:00:00.000+02:00"^^xsd:dateTime`.
 
 
 ## Function signatures and descriptions ## {#function-signatures}
@@ -81,13 +81,13 @@ The function `tfn:periodMinInclusive` takes a time period as input and returns t
 The input `$period` can be of type `xsd:dateTime`, `xsd:date`, `xsd:gYearMonth`, or `xsd:gYear`.
 
 If the input `$period` is an `xsd:dateTime` and has a timezone, the function returns the same value.
-Otherwise, if the input is an `xsd:dateTime` but has no explicit timezone, the input is interpreted as a period of -14 hours to +14 hours around the given dateTime, and the inclusive lower bound is returned as the `xsd:dateTime` with a timezone of UTC-14:00.
+Otherwise, if the input is an `xsd:dateTime` but has no explicit timezone, the input is interpreted as a period of -14 hours to +14 hours around the given dateTime, and the inclusive lower bound is returned as the `xsd:dateTime` with a timezone of UTC+14:00.
 
-If the input `$period` is an `xsd:date`, it is interpreted as a period from the start of that date (00:00:00.000) to the end of that date (23:59:59.999), and the inclusive lower bound is returned as an `xsd:dateTime` with the given timezone or UTC-14:00 if no timezone is specified.
+If the input `$period` is an `xsd:date`, it is interpreted as a period from the start of that date (00:00:00.000) to the end of that date (23:59:59.999), and the inclusive lower bound is returned as an `xsd:dateTime` with the given timezone or UTC+14:00 if no timezone is specified.
 
-If the input `$period` is an `xsd:gYearMonth`, it is interpreted as a period from the start of that month (00:00:00.000 on the first day) to the end of that month (23:59:59.999 on the last day), and the inclusive lower bound is returned as an `xsd:dateTime` with the given timezone or UTC-14:00 if no timezone is specified.
+If the input `$period` is an `xsd:gYearMonth`, it is interpreted as a period from the start of that month (00:00:00.000 on the first day) to the end of that month (23:59:59.999 on the last day), and the inclusive lower bound is returned as an `xsd:dateTime` with the given timezone or UTC+14:00 if no timezone is specified.
 
-If the input `$period` is an `xsd:gYear`, it is interpreted as a period from the start of that year (00:00:00.000 on January 1st) to the end of that year (23:59:59.999 on December 31st), and the inclusive lower bound is returned as an `xsd:dateTime` with the given timezone or UTC-14:00 if no timezone is specified.
+If the input `$period` is an `xsd:gYear`, it is interpreted as a period from the start of that year (00:00:00.000 on January 1st) to the end of that year (23:59:59.999 on December 31st), and the inclusive lower bound is returned as an `xsd:dateTime` with the given timezone or UTC+14:00 if no timezone is specified.
 
 
 **Examples**
@@ -95,19 +95,19 @@ If the input `$period` is an `xsd:gYear`, it is interpreted as a period from the
 <div class="example">
 The expression `tfn:periodMinInclusive("2025-06-30T09:00:00.000Z"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.000Z"^^xsd:dateTime`.
 
-The expression `tfn:periodMinInclusive("2025-06-30T09:00:00.000"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.000-14:00"^^xsd:dateTime`.
+The expression `tfn:periodMinInclusive("2025-06-30T09:00:00.000"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.000+14:00"^^xsd:dateTime`.
 
 The expression `tfn:periodMinInclusive("2025-06-30Z"^^xsd:date)` returns `"2025-06-30T00:00:00.000Z"^^xsd:dateTime`.
 
-The expression `tfn:periodMinInclusive("2025-06-30"^^xsd:date)` returns `"2025-06-30T00:00:00.000-14:00"^^xsd:dateTime`.
+The expression `tfn:periodMinInclusive("2025-06-30"^^xsd:date)` returns `"2025-06-30T00:00:00.000+14:00"^^xsd:dateTime`.
 
 The expression `tfn:periodMinInclusive("2025-06Z"^^xsd:gYearMonth)` returns `"2025-06-01T00:00:00.000Z"^^xsd:dateTime`.
 
-The expression `tfn:periodMinInclusive("2025-06"^^xsd:gYearMonth)` returns `"2025-06-01T00:00:00.000-14:00"^^xsd:dateTime`.
+The expression `tfn:periodMinInclusive("2025-06"^^xsd:gYearMonth)` returns `"2025-06-01T00:00:00.000+14:00"^^xsd:dateTime`.
 
 The expression `tfn:periodMinInclusive("2025Z"^^xsd:gYear)` returns `"2025-01-01T00:00:00.000Z"^^xsd:dateTime`.
 
-The expression `tfn:periodMinInclusive("2025"^^xsd:gYear)` returns `"2025-01-01T00:00:00.000-14:00"^^xsd:dateTime`.
+The expression `tfn:periodMinInclusive("2025"^^xsd:gYear)` returns `"2025-01-01T00:00:00.000+14:00"^^xsd:dateTime`.
 
 </div>
 
@@ -136,13 +136,13 @@ The function `tfn:periodMaxInclusive` takes a time period as input and returns t
 The input `$period` can be of type `xsd:dateTime`, `xsd:date`, `xsd:gYearMonth`, or `xsd:gYear`.
 
 If the input `$period` is an `xsd:dateTime` and has a timezone, the function returns the same value.
-Otherwise, if the input is an `xsd:dateTime` but has no explicit timezone, the input is interpreted as a period of -14 hours to +14 hours around the given dateTime, and the inclusive upper bound is returned as the `xsd:dateTime` with a timezone of UTC+14:00.
+Otherwise, if the input is an `xsd:dateTime` but has no explicit timezone, the input is interpreted as a period of -14 hours to +14 hours around the given dateTime, and the inclusive upper bound is returned as the `xsd:dateTime` with a timezone of UTC-14:00.
 
-If the input `$period` is an `xsd:date`, it is interpreted as a period from the start of that date (00:00:00.000) to the end of that date (23:59:59.999), and the inclusive upper bound is returned as an `xsd:dateTime` with the given timezone or UTC+14:00 if no timezone is specified.
+If the input `$period` is an `xsd:date`, it is interpreted as a period from the start of that date (00:00:00.000) to the end of that date (23:59:59.999), and the inclusive upper bound is returned as an `xsd:dateTime` with the given timezone or UTC-14:00 if no timezone is specified.
 
-If the input `$period` is an `xsd:gYearMonth`, it is interpreted as a period from the start of that month (00:00:00.000 on the first day) to the end of that month (23:59:59.999 on the last day), and the inclusive upper bound is returned as an `xsd:dateTime` with the given timezone or UTC+14:00 if no timezone is specified.
+If the input `$period` is an `xsd:gYearMonth`, it is interpreted as a period from the start of that month (00:00:00.000 on the first day) to the end of that month (23:59:59.999 on the last day), and the inclusive upper bound is returned as an `xsd:dateTime` with the given timezone or UTC-14:00 if no timezone is specified.
 
-If the input `$period` is an `xsd:gYear`, it is interpreted as a period from the start of that year (00:00:00.000 on January 1st) to the end of that year (23:59:59.999 on December 31st), and the inclusive upper bound is returned as an `xsd:dateTime` with the given timezone or UTC+14:00 if no timezone is specified.
+If the input `$period` is an `xsd:gYear`, it is interpreted as a period from the start of that year (00:00:00.000 on January 1st) to the end of that year (23:59:59.999 on December 31st), and the inclusive upper bound is returned as an `xsd:dateTime` with the given timezone or UTC-14:00 if no timezone is specified.
 
 
 **Examples**
@@ -150,19 +150,19 @@ If the input `$period` is an `xsd:gYear`, it is interpreted as a period from the
 <div class="example">
 The expression `tfn:periodMaxInclusive("2025-06-30T09:00:00.000Z"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.000Z"^^xsd:dateTime`.
 
-The expression `tfn:periodMaxInclusive("2025-06-30T09:00:00.000"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.000+14:00"^^xsd:dateTime`.
+The expression `tfn:periodMaxInclusive("2025-06-30T09:00:00.000"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.000-14:00"^^xsd:dateTime`.
 
 The expression `tfn:periodMaxInclusive("2025-06-30Z"^^xsd:date)` returns `"2025-06-30T23:59:59.999Z"^^xsd:dateTime`.
 
-The expression `tfn:periodMaxInclusive("2025-06-30"^^xsd:date)` returns `"2025-06-30T23:59:59.999+14:00"^^xsd:dateTime`.
+The expression `tfn:periodMaxInclusive("2025-06-30"^^xsd:date)` returns `"2025-06-30T23:59:59.999-14:00"^^xsd:dateTime`.
 
 The expression `tfn:periodMaxInclusive("2025-06Z"^^xsd:gYearMonth)` returns `"2025-06-30T23:59:59.999Z"^^xsd:dateTime`.
 
-The expression `tfn:periodMaxInclusive("2025-06"^^xsd:gYearMonth)` returns `"2025-06-30T23:59:59.999+14:00"^^xsd:dateTime`.
+The expression `tfn:periodMaxInclusive("2025-06"^^xsd:gYearMonth)` returns `"2025-06-30T23:59:59.999-14:00"^^xsd:dateTime`.
 
 The expression `tfn:periodMaxInclusive("2025Z"^^xsd:gYear)` returns `"2025-12-31T23:59:59.999Z"^^xsd:dateTime`.
 
-The expression `tfn:periodMaxInclusive("2025"^^xsd:gYear)` returns `"2025-12-31T23:59:59.999+14:00"^^xsd:dateTime`.
+The expression `tfn:periodMaxInclusive("2025"^^xsd:gYear)` returns `"2025-12-31T23:59:59.999-14:00"^^xsd:dateTime`.
 
 </div>
 
@@ -191,13 +191,13 @@ The function `tfn:periodMinExclusive` takes a time period as input and returns t
 The input `$period` can be of type `xsd:dateTime`, `xsd:date`, `xsd:gYearMonth`, or `xsd:gYear`.
 
 If the input `$period` is an `xsd:dateTime` and has a timezone, the function returns the same value.
-Otherwise, if the input is an `xsd:dateTime` but has no explicit timezone, the input is interpreted as a period of -14 hours to +14 hours around the given dateTime, and the exclusive lower bound is returned as the `xsd:dateTime` with a timezone of UTC-14:00.
+Otherwise, if the input is an `xsd:dateTime` but has no explicit timezone, the input is interpreted as a period of -14 hours to +14 hours around the given dateTime, and the exclusive lower bound is returned as the `xsd:dateTime` with a timezone of UTC+14:00.
 
-If the input `$period` is an `xsd:date`, it is interpreted as a period from the start of that date (00:00:00.000) to the end of that date (23:59:59.999), and the exclusive lower bound is returned as an `xsd:dateTime` with the given timezone or UTC-14:00 if no timezone is specified.
+If the input `$period` is an `xsd:date`, it is interpreted as a period from the start of that date (00:00:00.000) to the end of that date (23:59:59.999), and the exclusive lower bound is returned as an `xsd:dateTime` with the given timezone or UTC+14:00 if no timezone is specified.
 
-If the input `$period` is an `xsd:gYearMonth`, it is interpreted as a period from the start of that month (00:00:00.000 on the first day) to the end of that month (23:59:59.999 on the last day), and the exclusive lower bound is returned as an `xsd:dateTime` with the given timezone or UTC-14:00 if no timezone is specified.
+If the input `$period` is an `xsd:gYearMonth`, it is interpreted as a period from the start of that month (00:00:00.000 on the first day) to the end of that month (23:59:59.999 on the last day), and the exclusive lower bound is returned as an `xsd:dateTime` with the given timezone or UTC+14:00 if no timezone is specified.
 
-If the input `$period` is an `xsd:gYear`, it is interpreted as a period from the start of that year (00:00:00.000 on January 1st) to the end of that year (23:59:59.999 on December 31st), and the exclusive lower bound is returned as an `xsd:dateTime` with the given timezone or UTC-14:00 if no timezone is specified.
+If the input `$period` is an `xsd:gYear`, it is interpreted as a period from the start of that year (00:00:00.000 on January 1st) to the end of that year (23:59:59.999 on December 31st), and the exclusive lower bound is returned as an `xsd:dateTime` with the given timezone or UTC+14:00 if no timezone is specified.
 
 
 **Examples**
@@ -205,19 +205,19 @@ If the input `$period` is an `xsd:gYear`, it is interpreted as a period from the
 <div class="example">
 The expression `tfn:periodMinExclusive("2025-06-30T09:00:00.000Z"^^xsd:dateTime)` returns `"2025-06-30T08:59:59.999Z"^^xsd:dateTime`.
 
-The expression `tfn:periodMinExclusive("2025-06-30T09:00:00.000"^^xsd:dateTime)` returns `"2025-06-30T08:59:59.999-14:00"^^xsd:dateTime`.
+The expression `tfn:periodMinExclusive("2025-06-30T09:00:00.000"^^xsd:dateTime)` returns `"2025-06-30T08:59:59.999+14:00"^^xsd:dateTime`.
 
 The expression `tfn:periodMinExclusive("2025-06-30Z"^^xsd:date)` returns `"2025-06-29T23:59:59.999Z"^^xsd:dateTime`.
 
-The expression `tfn:periodMinExclusive("2025-06-30"^^xsd:date)` returns `"2025-06-29T23:59:59.999-14:00"^^xsd:dateTime`.
+The expression `tfn:periodMinExclusive("2025-06-30"^^xsd:date)` returns `"2025-06-29T23:59:59.999+14:00"^^xsd:dateTime`.
 
 The expression `tfn:periodMinExclusive("2025-06Z"^^xsd:gYearMonth)` returns `"2025-05-31T23:59:59.999Z"^^xsd:dateTime`.
 
-The expression `tfn:periodMinExclusive("2025-06"^^xsd:gYearMonth)` returns `"2025-05-31T23:59:59.999-14:00"^^xsd:dateTime`.
+The expression `tfn:periodMinExclusive("2025-06"^^xsd:gYearMonth)` returns `"2025-05-31T23:59:59.999+14:00"^^xsd:dateTime`.
 
 The expression `tfn:periodMinExclusive("2025Z"^^xsd:gYear)` returns `"2024-12-31T23:59:59.999Z"^^xsd:dateTime`.
 
-The expression `tfn:periodMinExclusive("2025"^^xsd:gYear)` returns `"2024-12-31T23:59:59.999-14:00"^^xsd:dateTime`.
+The expression `tfn:periodMinExclusive("2025"^^xsd:gYear)` returns `"2024-12-31T23:59:59.999+14:00"^^xsd:dateTime`.
 
 </div>
 
@@ -246,13 +246,13 @@ The function `tfn:periodMaxExclusive` takes a time period as input and returns t
 The input `$period` can be of type `xsd:dateTime`, `xsd:date`, `xsd:gYearMonth`, or `xsd:gYear`.
 
 If the input `$period` is an `xsd:dateTime` and has a timezone, the function returns the same value.
-Otherwise, if the input is an `xsd:dateTime` but has no explicit timezone, the input is interpreted as a period of -14 hours to +14 hours around the given dateTime, and the exclusive upper bound is returned as the `xsd:dateTime` with a timezone of UTC+14:00.
+Otherwise, if the input is an `xsd:dateTime` but has no explicit timezone, the input is interpreted as a period of -14 hours to +14 hours around the given dateTime, and the exclusive upper bound is returned as the `xsd:dateTime` with a timezone of UTC-14:00.
 
-If the input `$period` is an `xsd:date`, it is interpreted as a period from the start of that date (00:00:00.000) to the end of that date (23:59:59.999), and the exclusive upper bound is returned as an `xsd:dateTime` with the given timezone or UTC+14:00 if no timezone is specified.
+If the input `$period` is an `xsd:date`, it is interpreted as a period from the start of that date (00:00:00.000) to the end of that date (23:59:59.999), and the exclusive upper bound is returned as an `xsd:dateTime` with the given timezone or UTC-14:00 if no timezone is specified.
 
-If the input `$period` is an `xsd:gYearMonth`, it is interpreted as a period from the start of that month (00:00:00.000 on the first day) to the end of that month (23:59:59.999 on the last day), and the exclusive upper bound is returned as an `xsd:dateTime` with the given timezone or UTC+14:00 if no timezone is specified.
+If the input `$period` is an `xsd:gYearMonth`, it is interpreted as a period from the start of that month (00:00:00.000 on the first day) to the end of that month (23:59:59.999 on the last day), and the exclusive upper bound is returned as an `xsd:dateTime` with the given timezone or UTC-14:00 if no timezone is specified.
 
-If the input `$period` is an `xsd:gYear`, it is interpreted as a period from the start of that year (00:00:00.000 on January 1st) to the end of that year (23:59:59.999 on December 31st), and the exclusive upper bound is returned as an `xsd:dateTime` with the given timezone or UTC+14:00 if no timezone is specified.
+If the input `$period` is an `xsd:gYear`, it is interpreted as a period from the start of that year (00:00:00.000 on January 1st) to the end of that year (23:59:59.999 on December 31st), and the exclusive upper bound is returned as an `xsd:dateTime` with the given timezone or UTC-14:00 if no timezone is specified.
 
 
 **Examples**
@@ -260,19 +260,19 @@ If the input `$period` is an `xsd:gYear`, it is interpreted as a period from the
 <div class="example">
 The expression `tfn:periodMaxExclusive("2025-06-30T09:00:00.000Z"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.001Z"^^xsd:dateTime`.
 
-The expression `tfn:periodMaxExclusive("2025-06-30T09:00:00.000"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.001+14:00"^^xsd:dateTime`.
+The expression `tfn:periodMaxExclusive("2025-06-30T09:00:00.000"^^xsd:dateTime)` returns `"2025-06-30T09:00:00.001-14:00"^^xsd:dateTime`.
 
 The expression `tfn:periodMaxExclusive("2025-06-30Z"^^xsd:date)` returns `"2025-07-01T00:00:00.000Z"^^xsd:dateTime`.
 
-The expression `tfn:periodMaxExclusive("2025-06-30"^^xsd:date)` returns `"2025-07-01T00:00:00.000+14:00"^^xsd:dateTime`.
+The expression `tfn:periodMaxExclusive("2025-06-30"^^xsd:date)` returns `"2025-07-01T00:00:00.000-14:00"^^xsd:dateTime`.
 
 The expression `tfn:periodMaxExclusive("2025-06Z"^^xsd:gYearMonth)` returns `"2025-07-01T00:00:00.000Z"^^xsd:dateTime`.
 
-The expression `tfn:periodMaxExclusive("2025-06"^^xsd:gYearMonth)` returns `"2025-07-01T00:00:00.000+14:00"^^xsd:dateTime`.
+The expression `tfn:periodMaxExclusive("2025-06"^^xsd:gYearMonth)` returns `"2025-07-01T00:00:00.000-14:00"^^xsd:dateTime`.
 
 The expression `tfn:periodMaxExclusive("2025Z"^^xsd:gYear)` returns `"2026-01-01T00:00:00.000Z"^^xsd:dateTime`.
 
-The expression `tfn:periodMaxExclusive("2025"^^xsd:gYear)` returns `"2026-01-01T00:00:00.000+14:00"^^xsd:dateTime`.
+The expression `tfn:periodMaxExclusive("2025"^^xsd:gYear)` returns `"2026-01-01T00:00:00.000-14:00"^^xsd:dateTime`.
 
 </div>
 
